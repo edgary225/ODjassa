@@ -1,4 +1,8 @@
+"use client";
+
+import type { FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Search, ArrowRight, Sparkles } from "lucide-react";
 
 type Props = {
@@ -6,11 +10,20 @@ type Props = {
 };
 
 export default function BarreRecherche({ recherche }: Props) {
+  const router = useRouter();
+
+  function lancerRecherche(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const valeur = new FormData(event.currentTarget).get("q")?.toString().trim();
+    if (!valeur) return;
+
+    router.push(`/recherche?${new URLSearchParams({ q: valeur }).toString()}`);
+  }
+
   return (
     <div>
       <form
-        action="/recherche"
-        method="GET"
+        onSubmit={lancerRecherche}
         className="flex w-full items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm focus-within:border-[#F39A27]"
       >
         <div className="flex min-w-0 flex-1 items-center gap-3 px-3">

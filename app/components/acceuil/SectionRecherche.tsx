@@ -1,7 +1,21 @@
+"use client";
+
+import type { FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, MapPin, Search, Sparkles } from "lucide-react";
 
 export default function SectionRecherche() {
+  const router = useRouter();
+
+  function lancerRecherche(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const recherche = new FormData(event.currentTarget).get("q")?.toString().trim();
+    if (!recherche) return;
+
+    router.push(`/recherche?${new URLSearchParams({ q: recherche }).toString()}`);
+  }
+
   return (
     <section className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#10243A]">
       {/* image de fond */}
@@ -52,8 +66,7 @@ export default function SectionRecherche() {
         {/* barre de recherche */}
         <div className="mx-auto mt-10 w-full max-w-3xl">
           <form
-            action="/recherche"
-            method="GET"
+            onSubmit={lancerRecherche}
             className="flex w-full flex-col gap-2 rounded-2xl border border-white/30 bg-white p-2 shadow-2xl shadow-black/20 sm:flex-row sm:items-center"
           >
             <div className="flex min-w-0 flex-1 items-center gap-3 px-3">

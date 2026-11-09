@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MapPin, Star, Store, ArrowRight } from "lucide-react";
+import { suivreInteraction } from "@/app/analytics";
 
 export type MagasinGoogle = {
   place_id: string;
@@ -53,7 +54,7 @@ export default function OffresExternes({ magasins, onSelectionner }: Props) {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:gap-5">
-        {magasins.map((magasin) => {
+        {magasins.map((magasin, index) => {
           const categorie = Array.isArray(magasin.type)
             ? magasin.type[0]
             : magasin.type;
@@ -62,7 +63,13 @@ export default function OffresExternes({ magasins, onSelectionner }: Props) {
             <button
               key={magasin.place_id}
               type="button"
-              onClick={() => onSelectionner(magasin)}
+              onClick={() => {
+                suivreInteraction("store_selected", {
+                  source: "search_results",
+                  result_position: index + 1,
+                });
+                onSelectionner(magasin);
+              }}
               className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white text-left transition duration-300 hover:-translate-y-1 hover:border-[#F39A27]/60 hover:shadow-xl"
             >
               <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-slate-100">

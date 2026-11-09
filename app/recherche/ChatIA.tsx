@@ -6,6 +6,7 @@ import Link from "next/link";
 import ModalDetailsCommerce, {
   type CommerceAvecDetails,
 } from "./ModalDetailsCommerce";
+import { suivreInteraction } from "@/app/analytics";
 
 type Magasin = {
   place_id: string | null;
@@ -189,6 +190,10 @@ export default function ChatIA({ rechercheInitiale }: Props) {
     if (!rechercheInitiale || rechercheInitialeLancee.current) return;
 
     rechercheInitialeLancee.current = true;
+    suivreInteraction("assistant_search_submitted", {
+      source: "initial_query",
+      query_length: rechercheInitiale.length,
+    });
 
     void rechercher([
       {
@@ -216,6 +221,10 @@ export default function ChatIA({ rechercheInitiale }: Props) {
 
     if (!question || chargement) return;
 
+    suivreInteraction("assistant_message_sent", {
+      conversation_message_count: messages.length,
+      query_length: question.length,
+    });
     setSaisie("");
     setErreur(null);
 
@@ -308,7 +317,13 @@ export default function ChatIA({ rechercheInitiale }: Props) {
                       <button
                         type="button"
                         key={magasin.place_id || `${magasin.title}-${index}`}
-                        onClick={() => setCommerceSelectionne(magasin)}
+                        onClick={() => {
+                          suivreInteraction("store_selected", {
+                            source: "assistant_results",
+                            result_position: index + 1,
+                          });
+                          setCommerceSelectionne(magasin);
+                        }}
                         aria-label={`Afficher les détails de ${magasin.title}`}
                         className="flex w-full items-start gap-3 rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:border-blue-300 hover:shadow-sm"
                       >
@@ -433,7 +448,10 @@ export default function ChatIA({ rechercheInitiale }: Props) {
                     <button
                       key={suggestion}
                       type="button"
-                      onClick={() => setSaisie(suggestion)}
+                      onClick={() => {
+                        suivreInteraction("assistant_suggestion_selected");
+                        setSaisie(suggestion);
+                      }}
                       className="rounded-full border border-slate-200 px-3 py-1.5 text-xs text-slate-600 transition hover:border-[#F39A27] hover:text-[#10243A]"
                     >
                       {suggestion}

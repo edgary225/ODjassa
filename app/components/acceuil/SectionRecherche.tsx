@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, MapPin, Search, Sparkles } from "lucide-react";
+import { suivreInteraction } from "@/app/analytics";
 
 export default function SectionRecherche() {
   const router = useRouter();
@@ -13,6 +14,10 @@ export default function SectionRecherche() {
     const recherche = new FormData(event.currentTarget).get("q")?.toString().trim();
     if (!recherche) return;
 
+    suivreInteraction("search_submitted", {
+      source: "homepage",
+      query_length: recherche.length,
+    });
     router.push(`/recherche?${new URLSearchParams({ q: recherche }).toString()}`);
   }
 
@@ -34,7 +39,7 @@ export default function SectionRecherche() {
         {/* indication */}
         <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-white backdrop-blur-md sm:text-xs">
           <MapPin size={14} className="text-[#F39A27]" />
-          Votre guide local en Côte d&pos;Ivoire
+          Votre guide local en Côte d&apos;Ivoire
         </div>
 
         {/* titre principal */}
@@ -67,32 +72,39 @@ export default function SectionRecherche() {
         <div className="mx-auto mt-10 w-full max-w-3xl">
           <form
             onSubmit={lancerRecherche}
-            className="flex w-full flex-col gap-2 rounded-2xl border border-white/30 bg-white p-2 shadow-2xl shadow-black/20 sm:flex-row sm:items-center"
+            className="flex w-full items-center gap-1.5 rounded-2xl border border-white/40 bg-white p-1.5 shadow-2xl shadow-black/20 transition focus-within:border-[#F39A27] focus-within:ring-4 focus-within:ring-[#F39A27]/20 sm:gap-2 sm:p-2"
           >
-            <div className="flex min-w-0 flex-1 items-center gap-3 px-3">
-              <Search size={22} className="shrink-0 text-slate-400" />
+            <div className="flex min-w-0 flex-1 items-center gap-2 px-2 sm:gap-3 sm:px-3">
+              <Search size={20} className="shrink-0 text-[#F39A27]" />
 
               <input
                 type="search"
                 name="q"
-                placeholder="Que recherchez-vous ? Un commerce, un service..."
+                placeholder="Produit, commerce, service..."
                 aria-label="Que recherchez-vous ?"
                 required
-                className="h-12 w-full min-w-0 bg-transparent text-sm text-[#10243A] outline-none placeholder:text-slate-400 sm:text-base"
+                className="h-12 w-full min-w-0 bg-transparent text-base text-[#10243A] outline-none placeholder:text-sm placeholder:text-slate-400 sm:placeholder:text-base"
               />
             </div>
 
             <button
               type="submit"
-              aria-label="Rechercher"
-              className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#F39A27] text-[#10243A] shadow-lg transition hover:bg-orange-400 active:scale-[0.98]"
+              aria-label="Lancer la recherche"
+              className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#F39A27] px-3 text-sm font-bold text-[#10243A] shadow-lg transition hover:bg-orange-400 active:scale-[0.98] sm:px-5"
             >
-              <Search size={21} />
+              <Search size={19} />
+              <span>Chercher</span>
             </button>
           </form>
 
           <Link
             href="/recherche?mode=ia"
+            onClick={() =>
+              suivreInteraction("assistant_search_started", {
+                source: "homepage",
+              })
+
+            }
             className="mx-auto mt-4 inline-flex items-center gap-3 rounded-full border border-white/30 bg-white px-5 py-3 text-left text-[#10243A] shadow-lg transition hover:-translate-y-0.5 hover:bg-orange-50"
           >
             <span className="flex size-9 items-center justify-center rounded-full bg-orange-100 text-[#D97706]">

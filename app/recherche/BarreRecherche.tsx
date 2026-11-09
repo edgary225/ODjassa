@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, ArrowRight, Sparkles } from "lucide-react";
+import { suivreInteraction } from "@/app/analytics";
 
 type Props = {
   recherche: string;
@@ -17,6 +18,10 @@ export default function BarreRecherche({ recherche }: Props) {
     const valeur = new FormData(event.currentTarget).get("q")?.toString().trim();
     if (!valeur) return;
 
+    suivreInteraction("search_submitted", {
+      source: "search_results",
+      query_length: valeur.length,
+    });
     router.push(`/recherche?${new URLSearchParams({ q: valeur }).toString()}`);
   }
 
@@ -51,6 +56,11 @@ export default function BarreRecherche({ recherche }: Props) {
 
       <Link
         href="/recherche?mode=ia"
+        onClick={() =>
+          suivreInteraction("assistant_search_started", {
+            source: "search_results",
+          })
+        }
         className="mt-3 inline-flex items-center gap-2 rounded-xl border border-orange-200 bg-orange-50 px-4 py-2.5 text-sm font-bold text-[#10243A] transition hover:border-[#F39A27] hover:bg-orange-100"
       >
         <Sparkles size={17} className="text-[#D97706]" />

@@ -20,6 +20,14 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## PostHog analytics
+
+Client-side analytics uses `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and
+`NEXT_PUBLIC_POSTHOG_HOST`. Page views and named interactions are tracked when
+the project token is configured. Autocapture and session recording are disabled;
+search text, assistant messages, and URL query strings are not sent as analytics
+properties.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

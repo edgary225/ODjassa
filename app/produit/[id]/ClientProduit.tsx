@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { suivreInteraction } from "@/app/analytics";
 import {
   ArrowLeft,
   ExternalLink,
@@ -75,6 +76,9 @@ export default function ClientProduit() {
           );
         }
 
+        suivreInteraction("product_viewed", {
+          product_source: resultat.source,
+        });
         setProduit(resultat);
       } catch (error) {
         if (controleur.signal.aborted) return;
@@ -200,6 +204,11 @@ export default function ClientProduit() {
                   href={produit.link}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    suivreInteraction("external_offer_clicked", {
+                      product_source: produit.source,
+                    })
+                  }
                   className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#F39A27] px-6 py-3 text-sm font-extrabold text-[#10243A] transition hover:bg-orange-400"
                 >
                   Voir l&apos;offre

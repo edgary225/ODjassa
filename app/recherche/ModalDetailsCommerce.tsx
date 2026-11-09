@@ -14,6 +14,7 @@ import {
   Store,
   X,
 } from "lucide-react";
+import { suivreInteraction } from "@/app/analytics";
 
 export type CommerceAvecDetails = {
   place_id: string | null;
@@ -287,6 +288,11 @@ export default function ModalDetailsCommerce({ commerce, onClose }: Props) {
                       </p>
                       <a
                         href={`tel:${telephone}`}
+                        onClick={() =>
+                          suivreInteraction("store_action_clicked", {
+                            action: "phone",
+                          })
+                        }
                         className="mt-1 block text-sm font-semibold text-[#10243A]"
                       >
                         {telephone}
@@ -305,6 +311,11 @@ export default function ModalDetailsCommerce({ commerce, onClose }: Props) {
                         href={siteWeb}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          suivreInteraction("store_action_clicked", {
+                            action: "website",
+                          })
+                        }
                         className="mt-1 block break-all text-sm font-semibold text-[#10243A]"
                       >
                         {siteWeb}
@@ -331,6 +342,11 @@ export default function ModalDetailsCommerce({ commerce, onClose }: Props) {
                 {telephone && (
                   <a
                     href={`tel:${telephone}`}
+                    onClick={() =>
+                      suivreInteraction("store_action_clicked", {
+                        action: "phone",
+                      })
+                    }
                     className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#10243A] px-4 text-sm font-bold text-white"
                   >
                     <Phone size={17} />
@@ -342,6 +358,11 @@ export default function ModalDetailsCommerce({ commerce, onClose }: Props) {
                     href={lienWhatsApp}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      suivreInteraction("store_action_clicked", {
+                        action: "whatsapp",
+                      })
+                    }
                     className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 text-sm font-bold text-white"
                   >
                     <MessageCircle size={17} />
@@ -353,6 +374,11 @@ export default function ModalDetailsCommerce({ commerce, onClose }: Props) {
                     href={urlMaps}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      suivreInteraction("store_action_clicked", {
+                        action: "maps",
+                      })
+                    }
                     className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#F39A27] px-4 text-sm font-bold text-[#10243A]"
                   >
                     <MapPin size={17} />

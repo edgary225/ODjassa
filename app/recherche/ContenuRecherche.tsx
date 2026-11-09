@@ -9,6 +9,7 @@ import {
 import BarreRecherche from "./BarreRecherche";
 import OffresExternes, { type MagasinGoogle } from "./OffresExternes";
 import ModalDetailsCommerce from "./ModalDetailsCommerce";
+import { suivreInteraction } from "@/app/analytics";
 
 type Props = {
   rechercheInitiale: string;
@@ -65,10 +66,16 @@ export default function ContenuRecherche({
 
         setMagasins(Array.isArray(donnees.magasins) ? donnees.magasins : []);
 
+        suivreInteraction("local_search_completed", {
+          result_count: Array.isArray(donnees.magasins)
+            ? donnees.magasins.length
+            : 0,
+        });
         setRechercheChargee(recherche);
       } catch (error) {
         if (controleur.signal.aborted) return;
 
+        suivreInteraction("local_search_failed");
         setErreur(
           error instanceof Error
             ? error.message
